@@ -5,42 +5,25 @@ import csv
 
 #settings
 correction = 'Korrektur'
-path = 'C:/Users/user/test_path/' #Care: Windows replace '\' to '/' or use the r
-os.chdir(path) #os.chdir(r'C:\Users\user\test_path')
+duty = 'Abgabe_01'                                                  #adjust
+path = 'C:/Users/user/test_path/'                                   #adjust Care: Windows replace '\' to '/' or use the r 
+os.chdir(path)                                                      #other opportunity: os.chdir(r'C:\Users\user\test_path')
 
 #rename files
-j = 0
+student_name = []
 for pdf in os.listdir('.'):
-    if pdf.count('_') == 4:
-        name, number, assign, file, filename = pdf.split('_')
-        f_name, extension = filename.split('.')
-        new_name = f'{correction}_{name}.{extension}'
-        print(new_name)
-        os.rename(pdf,new_name)
-    elif pdf.count('_') == 5:
-        name, number, assign, file, filename, end = pdf.split('_')
-        f_name, extension = end.split('.')
-        new_name = f'{correction}_{name}.{extension}'
-        print(new_name)
-        os.rename(pdf,new_name)
-    else:
-        print('Anzahl an _ stimmen nicht.')
-    j += 1
-
+        name, rest = pdf.split('_',1)                               #seperate name e.g. max mustermann_112_homework1_group1.pdf
+        unimportant, extension = rest.split('.')                    #get the extension e.g. pdf
+        new_name = f'{correction}_{duty}_{name}.{extension}'        #create the new name of the document or file
+        student_name.append(name)                                   #save the names in an array
+        os.rename(pdf,new_name)                                     #rename the files or documents
 
 #save names in csv
-arr=[]
-arr = [0 for i in range(j)]
-k = 0
-for pdf in os.listdir('.'):
-    arr[k] = pdf
-    k += 1
-
-with open('Korrektur_Abgabe_1.csv', 'w', newline='') as csvfile:
+with open('Korrektur_Abgabe_01.csv', 'w', newline='') as csvfile:    #adjust 
     
     fieldnames = ['Studierende']
     thewriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
     thewriter.writeheader()
 
-    for student in arr:
+    for student in student_name:
         thewriter.writerow({'Studierende':student})
